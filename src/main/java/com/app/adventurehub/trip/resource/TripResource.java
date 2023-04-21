@@ -1,7 +1,9 @@
 package com.app.adventurehub.trip.resource;
 
-import com.app.adventurehub.trip.domain.model.entity.Season;
+import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
 import lombok.*;
+
+import java.util.Date;
 
 @Getter
 @Setter
@@ -14,7 +16,7 @@ public class TripResource {
     private String name;
     private String description;
     private Double price;
-    private String start_date;
-    private String end_date;
-    private Season season;
+    private Date start_date;
+    private Date end_date;
+    private Seasons season;
 }

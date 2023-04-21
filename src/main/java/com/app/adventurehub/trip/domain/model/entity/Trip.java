@@ -8,6 +8,7 @@ import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -21,23 +22,17 @@ public class Trip {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
-    @NotBlank
-    @Size(max = 255)
     private String status;
     private String name;
     private String description;
 
-    @NotNull
-    @DecimalMin(value = "0.00", inclusive = false)
+    @Column(precision = 10, scale = 2)
     private Double price;
 
-    private String start_date;
-    private String end_date;
+    private Date start_date;
+    private Date end_date;
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "season_id", nullable = false)
     @JsonIgnore
-    private Season season_id;
-    private String season;
-
+    private Season season;
 }
