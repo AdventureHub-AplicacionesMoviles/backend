@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/trips")
 public class TripController {
     private final TripService tripService;
 
@@ -21,7 +21,7 @@ public class TripController {
         this.tripService = tripService;
         this.mapper = mapper;
     }
-    @GetMapping("trips")
+    @GetMapping
     public List<TripResource> getAllTripById(){
         return mapper.toResourceList(tripService.GetAll());
     }
@@ -34,5 +34,10 @@ public class TripController {
     @PostMapping
     public ResponseEntity<TripResource> createTrip(@RequestBody CreateTripResource resource){
         return new ResponseEntity<>(mapper.toResource(tripService.create(mapper.toModel(resource))), HttpStatus.CREATED);
+    }
+    @GetMapping("/season/{season}")
+    public List<TripResource> getTripBySeason(@PathVariable(value ="season") String name){
+        System.out.println(name);
+        return mapper.toResourceList(tripService.getTripBySeason(name));
     }
 }

@@ -34,6 +34,11 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
+    public List<Trip> getTripBySeason(String name) {
+
+        return tripRepository.findAllBySeason(name);
+    }
+    @Override
     public Trip create(Trip trip) {
         Set<ConstraintViolation<Trip>> violations = validator.validate(trip);
 

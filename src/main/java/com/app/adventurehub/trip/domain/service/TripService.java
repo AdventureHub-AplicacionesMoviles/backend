@@ -8,4 +8,5 @@ public interface TripService {
     List<Trip> GetAll();
     List<Trip> getTripByPrice(Double price);
     Trip create(Trip trip);
+    List<Trip> getTripBySeason(String name);
 }

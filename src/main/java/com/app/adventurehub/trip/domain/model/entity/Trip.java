@@ -1,5 +1,6 @@
 package com.app.adventurehub.trip.domain.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -33,4 +34,9 @@ public class Trip {
 
     private String start_date;
     private String end_date;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "season_id", nullable = false)
+    @JsonIgnore
+    private Season season_id;
+    private String season;
 }
