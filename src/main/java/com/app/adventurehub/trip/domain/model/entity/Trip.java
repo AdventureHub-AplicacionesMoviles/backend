@@ -39,4 +39,5 @@ public class Trip {
     @JsonIgnore
     private Season season_id;
     private String season;
+
 }

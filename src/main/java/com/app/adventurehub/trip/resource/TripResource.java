@@ -16,5 +16,5 @@ public class TripResource {
     private Double price;
     private String start_date;
     private String end_date;
-    private Season season_id;
+    private Season season;
 }

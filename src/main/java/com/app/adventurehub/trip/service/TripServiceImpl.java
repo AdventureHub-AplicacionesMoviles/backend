@@ -2,6 +2,7 @@ package com.app.adventurehub.trip.service;
 
 import com.app.adventurehub.shared.exception.ResourceValidationException;
 import com.app.adventurehub.trip.domain.model.entity.Trip;
+import com.app.adventurehub.trip.domain.persistence.SeasonRepository;
 import com.app.adventurehub.trip.domain.persistence.TripRepository;
 import com.app.adventurehub.trip.domain.service.TripService;
 import org.springframework.stereotype.Service;
@@ -15,11 +16,12 @@ import java.util.Set;
 public class TripServiceImpl implements TripService {
     private static final String ENTITY = "Trips";
     private final TripRepository tripRepository;
-
+    private final SeasonRepository seasonRepository;
     private final Validator validator;
 
-    public TripServiceImpl(TripRepository tripRepository, Validator validator) {
+    public TripServiceImpl(TripRepository tripRepository, SeasonRepository seasonRepository, Validator validator) {
         this.tripRepository = tripRepository;
+        this.seasonRepository = seasonRepository;
         this.validator = validator;
     }
 
