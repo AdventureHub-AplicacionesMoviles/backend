@@ -22,6 +22,6 @@ public class Season {
     @Column(length = 20)
     private Seasons name;
 
-    @OneToMany(mappedBy = "season")
+    @OneToMany(mappedBy = "season", cascade = CascadeType.ALL)
     private List<Trip> trips;
 }

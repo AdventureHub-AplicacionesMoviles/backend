@@ -4,11 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -31,8 +28,26 @@ public class Trip {
 
     private Date start_date;
     private Date end_date;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "destination_id", nullable = false)
+    private Destination destination;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
+    private Category category;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "season_id", nullable = false)
     @JsonIgnore
     private Season season;
+
+    @OneToOne(mappedBy = "trip", cascade = CascadeType.ALL)
+    private TripDetails tripDetails;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private Set<Itinerary> itineraries;
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private Set<Rating> ratings;
 }
