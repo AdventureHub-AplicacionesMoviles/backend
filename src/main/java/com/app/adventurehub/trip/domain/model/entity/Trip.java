@@ -29,6 +29,8 @@ public class Trip {
     private Date start_date;
     private Date end_date;
 
+    private String group_size;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "destination_id", nullable = false)
     private Destination destination;
@@ -42,8 +44,8 @@ public class Trip {
     @JsonIgnore
     private Season season;
 
-    @OneToOne(mappedBy = "trip", cascade = CascadeType.ALL)
-    private TripDetails tripDetails;
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private Set<TripDetails> tripDetails;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
     private Set<Itinerary> itineraries;

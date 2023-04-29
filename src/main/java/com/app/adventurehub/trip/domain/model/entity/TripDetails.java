@@ -1,5 +1,6 @@
 package com.app.adventurehub.trip.domain.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -21,13 +22,9 @@ public class TripDetails {
 
     @Column(nullable = false, length = 255)
     private String imageUrl;
-    private String difficulty;
-    private String duration;
-    private String group_size;
-    private String activities;
-    private String accommodation;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "trip_id")
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "season_id", nullable = false)
+    @JsonIgnore
     private Trip trip;
 }

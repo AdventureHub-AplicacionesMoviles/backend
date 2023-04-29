@@ -7,8 +7,8 @@ import lombok.*;
 @With
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeasonResource {
+public class DestinationResource {
     private Long id;
-
     private String name;
+    private String description;
 }

@@ -24,14 +24,13 @@ public class TripController {
     }
     @GetMapping
     @Operation(summary = "Get All Trips", tags = {"Trips"} )
-    public List<TripResource> getAllTripBy(){
+    public List<TripResource> getAllTrips(){
         return mapper.toResourceList(tripService.GetAll());
     }
 
     @GetMapping("/{price}")
     @Operation(summary = "Get Trip By Price", tags = {"Trips"})
     public List<TripResource> getTripByPrice(@PathVariable(value ="price") Double price){
-        System.out.println(price);
         return mapper.toResourceList(tripService.getTripByPrice(price));
     }
     @PostMapping
@@ -42,7 +41,6 @@ public class TripController {
     @GetMapping("/season/{season}")
     @Operation(summary = "Get Trip By Season", tags = {"Trips"})
     public List<TripResource> getTripBySeason(@PathVariable(value ="season") String name){
-        System.out.println(name);
         return mapper.toResourceList(tripService.getTripBySeason(name));
     }
 }

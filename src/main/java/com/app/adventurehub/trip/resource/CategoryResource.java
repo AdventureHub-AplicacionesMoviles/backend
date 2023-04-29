@@ -7,7 +7,7 @@ import lombok.*;
 @With
 @NoArgsConstructor
 @AllArgsConstructor
-public class SeasonResource {
+public class CategoryResource {
     private Long id;
 
     private String name;

@@ -1,9 +1,9 @@
 package com.app.adventurehub.trip.resource;
 
-import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
 import lombok.*;
 
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -12,11 +12,19 @@ import java.util.Date;
 @AllArgsConstructor
 public class TripResource {
     private Long id;
-    private String status;
     private String name;
     private String description;
-    private Double price;
     private Date start_date;
     private Date end_date;
-    private Seasons season;
+    private Double price;
+    private String difficulty;
+    private String status;
+    private String group_size;
+    private CategoryResource category;
+    private SeasonResource season;
+    private DestinationResource destination;
+    private Set<TripDetailsResource> tripDetails;
+    private Set<ItineraryResource> itineraries;
+
+
 }

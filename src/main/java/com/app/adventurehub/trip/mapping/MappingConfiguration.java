@@ -1,5 +1,6 @@
 package com.app.adventurehub.trip.mapping;
 
+import com.app.adventurehub.reservation.mapping.ReservationMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,5 +12,8 @@ public class MappingConfiguration {
     }
 
     @Bean
-    public SeasonMapper seasonMapper(){ return new SeasonMapper();}
+    public ReservationMapper reservationMapper() { return new ReservationMapper(); }
+
+    @Bean
+    public SeasonMapper seasonMapper(){ return new SeasonMapper(); }
 }
