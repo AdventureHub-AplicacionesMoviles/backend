@@ -5,22 +5,21 @@ import com.app.adventurehub.reservation.mapping.ReservationMapper;
 import com.app.adventurehub.reservation.resource.CreateReservationResource;
 import com.app.adventurehub.reservation.resource.ReservationResource;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/reservations")
+@AllArgsConstructor
 public class ReservationController {
     private final ReservationService reservationService;
     private final ReservationMapper mapper;
 
-    public ReservationController(ReservationService reservationService, ReservationMapper mapper) {
-        this.reservationService = reservationService;
-        this.mapper = mapper;
-    }
     @GetMapping
     @Operation(summary = "Get All Reservations", tags = {"Reservations"} )
     public List<ReservationResource> getAllReservations(){
@@ -35,7 +34,7 @@ public class ReservationController {
 
     @PostMapping
     @Operation(summary = "Create Reservation", tags = {"Reservations"})
-    public ResponseEntity<ReservationResource> createReservation(@RequestBody CreateReservationResource resource){
+    public ResponseEntity<ReservationResource> createReservation(@Valid @RequestBody CreateReservationResource resource){
         return new ResponseEntity<>(mapper.toResource(reservationService.create(mapper.toModel(resource))), HttpStatus.CREATED);
     }
 }

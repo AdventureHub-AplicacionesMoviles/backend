@@ -5,23 +5,22 @@ import com.app.adventurehub.trip.mapping.TripMapper;
 import com.app.adventurehub.trip.resource.CreateTripResource;
 import com.app.adventurehub.trip.resource.TripResource;
 import io.swagger.v3.oas.annotations.Operation;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/trips")
+@AllArgsConstructor
 public class TripController {
-    private final TripService tripService;
 
+    private final TripService tripService;
     private final TripMapper mapper;
 
-    public TripController(TripService tripService, TripMapper mapper) {
-        this.tripService = tripService;
-        this.mapper = mapper;
-    }
     @GetMapping
     @Operation(summary = "Get All Trips", tags = {"Trips"} )
     public List<TripResource> getAllTrips(){
@@ -35,7 +34,7 @@ public class TripController {
     }
     @PostMapping
     @Operation(summary = "Create Trip", tags = {"Trips"})
-    public ResponseEntity<TripResource> createTrip(@RequestBody CreateTripResource resource){
+    public ResponseEntity<TripResource> createTrip(@Valid @RequestBody CreateTripResource resource){
         return new ResponseEntity<>(mapper.toResource(tripService.create(mapper.toModel(resource))), HttpStatus.CREATED);
     }
     @GetMapping("/season/{season}")

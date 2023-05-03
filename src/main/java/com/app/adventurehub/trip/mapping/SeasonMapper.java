@@ -2,38 +2,35 @@ package com.app.adventurehub.trip.mapping;
 
 import com.app.adventurehub.shared.mapping.EnhancedModelMapper;
 import com.app.adventurehub.trip.domain.model.entity.Season;
-import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
 import com.app.adventurehub.trip.resource.SeasonResource;
-import org.modelmapper.AbstractConverter;
-import org.modelmapper.Converter;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class SeasonMapper {
+@Component
+@AllArgsConstructor
+public class SeasonMapper implements Serializable {
+
+    private static final long serialVersionUID = 1L;
     @Autowired
-    EnhancedModelMapper mapper;
+    private EnhancedModelMapper modelMapper;
 
-    Converter<Seasons, String> roleToString = new AbstractConverter<Seasons, String>() {
-        @Override
-        protected String convert(Seasons role) {
-            return role == null ? null : role.name();
-        }
-    };
+    public SeasonMapper seasonMapper() {
+        return new SeasonMapper(modelMapper);
+    }
 
     public SeasonResource toResource(Season model) {
-        mapper.addConverter(roleToString);
-        return mapper.map(model, SeasonResource.class);
+        SeasonResource resource = new SeasonResource();
+        resource.setId(model.getId());
+        resource.setName(model.getName());
+        return resource;
     }
 
-    public Page<SeasonResource> modelListToPage(List<Season> modelList, Pageable pageable) {
-        mapper.addConverter(roleToString);
-        return new PageImpl<>(mapper.mapList(modelList, SeasonResource.class), pageable, modelList.size());
-    }
     public List<SeasonResource> toResourceList(List<Season> modelList){
-        return mapper.mapList(modelList, SeasonResource.class);
+        return modelList.stream().map(this::toResource).collect(Collectors.toList());
     }
 }

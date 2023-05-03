@@ -5,10 +5,9 @@ import lombok.*;
 @Getter
 @Setter
 @With
-@NoArgsConstructor
 @AllArgsConstructor
-public class ActivityResource {
-    private Long id;
-    private String name;
+@NoArgsConstructor
+public class Coordinates {
+    private Double latitude;
+    private Double longitude;
 }
-

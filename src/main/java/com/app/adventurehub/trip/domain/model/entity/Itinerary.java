@@ -3,6 +3,8 @@ package com.app.adventurehub.trip.domain.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -10,23 +12,29 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "itineraries")
+@Table(name = "itinerary")
 public class Itinerary {
+
+    public Itinerary(int day, String location, Double latitude, Double longitude, Trip trip) {
+        this.day = day;
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.trip = trip;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, length = 255)
-    private String name;
-    private String description;
-    private String location;
-    private String latitude;
-    private String longitude;
-
-    @Column(nullable = false)
     private int day;
+    private String location;
+    private Double latitude;
+    private Double longitude;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "trip_id", nullable = false)
     private Trip trip;
+
+    @OneToMany(mappedBy = "itinerary", cascade = CascadeType.ALL)
+    private Set<Activity> activities = new HashSet<>();
 }

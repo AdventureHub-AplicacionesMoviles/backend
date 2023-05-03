@@ -7,6 +7,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -15,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "reservations")
+@Table(name = "reservation")
 public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +35,6 @@ public class Reservation {
     private Trip trip;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.PERSIST)
-    private Set<Payment> payments;
+    private Set<Payment> payments = new HashSet<>();
 
 }

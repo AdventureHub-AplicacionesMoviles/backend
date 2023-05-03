@@ -6,13 +6,18 @@ import com.app.adventurehub.trip.domain.persistence.CategoryRepository;
 import com.app.adventurehub.trip.domain.persistence.DestinationRepository;
 import com.app.adventurehub.trip.domain.persistence.SeasonRepository;
 import com.app.adventurehub.trip.resource.*;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@Component
+@AllArgsConstructor
 public class TripMapper implements Serializable {
+    private static final long serialVersionUID = 1L;
     @Autowired
     EnhancedModelMapper mapper;
 
@@ -20,10 +25,32 @@ public class TripMapper implements Serializable {
     SeasonRepository seasonRepository;
 
     @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
     DestinationRepository destinationRepository;
 
     @Autowired
-    CategoryRepository categoryRepository;
+    CategoryMapper categoryMapper;
+
+    @Autowired
+    SeasonMapper seasonMapper;
+
+    @Autowired
+    TripDetailsMapper tripDetailsMapper;
+
+    @Autowired
+    ItineraryMapper itineraryMapper;
+
+    @Autowired
+    ActivityMapper activityMapper;
+
+    @Autowired
+    DestinationMapper destinationMapper;
+
+    public TripMapper tripMapper() {
+        return new TripMapper(mapper, seasonRepository, categoryRepository,destinationRepository, categoryMapper, seasonMapper, tripDetailsMapper, itineraryMapper, activityMapper, destinationMapper);
+    }
 
     public TripResource toResource(Trip model){
         TripResource resource = new TripResource();
@@ -36,29 +63,32 @@ public class TripMapper implements Serializable {
         resource.setDifficulty(model.getCategory().getName());
         resource.setStatus(model.getStatus());
         resource.setGroup_size(model.getGroup_size());
-        resource.setCategory(mapper.map(model.getCategory(), CategoryResource.class));
-        resource.setSeason(mapper.map(model.getSeason(), SeasonResource.class));
-        resource.setDestination(mapper.map(model.getDestination(), DestinationResource.class));
-        resource.setTripDetails(Collections.singleton(mapper.map(model.getTripDetails(), TripDetailsResource.class)));
-        resource.setItineraries(Collections.singleton(mapper.map(model.getItineraries(), ItineraryResource.class)));
+        resource.setCategory(categoryMapper.toResource(model.getCategory()).getName());
+        resource.setSeason(seasonMapper.toResource(model.getSeason()).getName());
+        resource.setDestination(destinationMapper.toResource(model.getDestination()));
+        resource.setImages(tripDetailsMapper.toResourceList(model.getTripDetails()));
+        resource.setItineraries(itineraryMapper.toResourceList(model.getItineraries()));
 
         return resource;
     }
 
     public Trip toModel(CreateTripResource resource) {
+        Set<TripDetails> tripDetails = new HashSet<>();
+        Set<Itinerary> itineraries = new HashSet<>();
+
         Optional<Season> season = seasonRepository.findById(resource.getSeasonId());
         if (!season.isPresent()) {
             throw new RuntimeException("Season not found");
         }
 
-        Optional<Destination> destination = destinationRepository.findById(resource.getDestinationId());
-        if (!destination.isPresent()) {
-            throw new RuntimeException("Destination not found");
-        }
-
         Optional<Category> category = categoryRepository.findById(resource.getCategoryId());
         if (!category.isPresent()) {
             throw new RuntimeException("Category not found");
+        }
+
+        Optional<Destination> destination = destinationRepository.findById(resource.getDestinationId());
+        if (!destination.isPresent()) {
+            throw new RuntimeException("Destination not found");
         }
 
         Trip trip = new Trip();
@@ -70,22 +100,24 @@ public class TripMapper implements Serializable {
         trip.setSeason(season.get());
         trip.setGroup_size(resource.getGroup_size());
         trip.setStatus(resource.getStatus());
-        trip.setDestination(destination.get());
         trip.setCategory(category.get());
+        trip.setDestination(destination.get());
 
-        Set<TripDetails> tripDetails = new HashSet<>();
-        for (CreateTripDetailsResource detailsResource : resource.getTripDetails()) {
-            TripDetails tripDetailsModel = mapper.map(detailsResource, TripDetails.class);
-            tripDetailsModel.setTrip(trip);
-            tripDetails.add(tripDetailsModel);
+        for (String imageUrl : resource.getImages()) {
+            TripDetails details = tripDetailsMapper.toModel(imageUrl, trip);
+            tripDetails.add(details);
         }
         trip.setTripDetails(tripDetails);
 
-        Set<Itinerary> itineraries = new HashSet<>();
         for (CreateItineraryResource itineraryResource : resource.getItineraries()) {
-            Itinerary itineraryModel = mapper.map(itineraryResource, Itinerary.class);
-            itineraryModel.setTrip(trip);
-            itineraries.add(itineraryModel);
+            Itinerary itinerary = itineraryMapper.toModel(itineraryResource, trip);
+            Set<Activity> activities = new HashSet<>();
+            for (String activityResource : itineraryResource.getActivities()) {
+                Activity activity = activityMapper.toModel(activityResource, itinerary);
+                activities.add(activity);
+            }
+            itinerary.setActivities(activities);
+            itineraries.add(itinerary);
         }
         trip.setItineraries(itineraries);
 

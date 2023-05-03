@@ -5,25 +5,20 @@ import com.app.adventurehub.trip.domain.model.entity.Trip;
 import com.app.adventurehub.trip.domain.persistence.SeasonRepository;
 import com.app.adventurehub.trip.domain.persistence.TripRepository;
 import com.app.adventurehub.trip.domain.service.TripService;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
 @Service
+@AllArgsConstructor
 public class TripServiceImpl implements TripService {
     private static final String ENTITY = "Trips";
     private final TripRepository tripRepository;
-    private final SeasonRepository seasonRepository;
-    private final Validator validator;
-
-    public TripServiceImpl(TripRepository tripRepository, SeasonRepository seasonRepository, Validator validator) {
-        this.tripRepository = tripRepository;
-        this.seasonRepository = seasonRepository;
-        this.validator = validator;
-    }
 
     @Override
     public List<Trip> GetAll() {
@@ -37,20 +32,20 @@ public class TripServiceImpl implements TripService {
 
     @Override
     public List<Trip> getTripBySeason(String name) {
-
         return tripRepository.findAllBySeason(name);
     }
     @Override
     public Trip create(Trip trip) {
-        Set<ConstraintViolation<Trip>> violations = validator.validate(trip);
-
-        if(!violations.isEmpty())
-            throw new ResourceValidationException(ENTITY, violations);
-
+        HashMap<String, List<String>> errors = new HashMap<>();
         Trip tripWithName = tripRepository.findByName(trip.getName());
 
-        if(tripWithName != null)
-            throw new ResourceValidationException(ENTITY, "Name already exists");
+        if(tripWithName != null) {
+            errors.put(ENTITY, List.of("Name already exists"));
+        }
+
+        if(!errors.isEmpty()) {
+            throw new ResourceValidationException("Trip", errors);
+        }
 
         return tripRepository.save(trip);
     }

@@ -1,5 +1,6 @@
 package com.app.adventurehub.trip.resource;
 
+import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
 import lombok.*;
 
 @Getter
@@ -10,5 +11,5 @@ import lombok.*;
 public class SeasonResource {
     private Long id;
 
-    private String name;
+    private Seasons name;
 }

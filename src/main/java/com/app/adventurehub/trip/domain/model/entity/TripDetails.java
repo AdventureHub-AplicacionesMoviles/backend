@@ -16,6 +16,12 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "trip_details")
 public class TripDetails {
+
+    public TripDetails(String imageUrl, Trip trip) {
+        this.imageUrl = imageUrl;
+        this.trip = trip;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -24,7 +30,7 @@ public class TripDetails {
     private String imageUrl;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "season_id", nullable = false)
+    @JoinColumn(name = "trip_id", nullable = false)
     @JsonIgnore
     private Trip trip;
 }

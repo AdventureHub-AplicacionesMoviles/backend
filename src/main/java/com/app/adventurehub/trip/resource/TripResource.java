@@ -1,8 +1,10 @@
 package com.app.adventurehub.trip.resource;
 
+import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
 import lombok.*;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -20,11 +22,11 @@ public class TripResource {
     private String difficulty;
     private String status;
     private String group_size;
-    private CategoryResource category;
-    private SeasonResource season;
+    private String category;
+    private Seasons season;
     private DestinationResource destination;
-    private Set<TripDetailsResource> tripDetails;
-    private Set<ItineraryResource> itineraries;
+    private Set<String> images = new HashSet<>();
+    private Set<ItineraryResource> itineraries = new HashSet<>();
 
 
 }

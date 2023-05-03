@@ -14,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "conversations")
+@Table(name = "conversation")
 public class Conversation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Conversation {
     private String status;
 
     @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
-    private Set<Message> messages;
+    private Set<Message> messages = new HashSet<>();
 
     @ManyToMany
     @JoinTable(

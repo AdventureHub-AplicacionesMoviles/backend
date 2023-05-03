@@ -1,8 +1,7 @@
 package com.app.adventurehub.trip.persistence;
 
-import com.app.adventurehub.trip.domain.model.entity.Season;
-import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
-import com.app.adventurehub.trip.domain.persistence.SeasonRepository;
+import com.app.adventurehub.trip.domain.service.CategoryService;
+import com.app.adventurehub.trip.domain.service.DestinationService;
 import com.app.adventurehub.trip.domain.service.SeasonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,14 +11,19 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+
 @Service
 public class DatabaseSeedingConfig {
     private static final Logger logger = LoggerFactory.getLogger(DatabaseSeedingConfig.class);
 
     @Autowired
     private SeasonService seasonService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private DestinationService destinationService;
 
     @EventListener
     public void onApplicationReady(ApplicationReadyEvent event) {
@@ -28,6 +32,8 @@ public class DatabaseSeedingConfig {
                 name,
                 new Timestamp(System.currentTimeMillis()));
         seasonService.seed();
+        categoryService.seed();
+        destinationService.seed();
         logger.info("Finished Database Seeding Process for {} at {}",
                 name,
                 new Timestamp(System.currentTimeMillis()));

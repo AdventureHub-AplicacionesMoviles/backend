@@ -10,7 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "activities")
+@Table(name = "activity")
 public class Activity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,4 +22,9 @@ public class Activity {
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name="itinerary_id", nullable = false)
     private Itinerary itinerary;
+
+    public Activity(String name, Itinerary itinerary) {
+        this.name = name;
+        this.itinerary = itinerary;
+    }
 }

@@ -14,4 +14,5 @@ public class CreateReservationResource {
     private Integer number_of_people;
     private Long userId;
     private Long tripId;
+    private String status = "A";
 }

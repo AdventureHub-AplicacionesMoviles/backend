@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -13,7 +14,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "trips")
+@Table(name = "trip")
 public class Trip {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,10 +33,6 @@ public class Trip {
     private String group_size;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    @JoinColumn(name = "destination_id", nullable = false)
-    private Destination destination;
-
-    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
@@ -44,12 +41,17 @@ public class Trip {
     @JsonIgnore
     private Season season;
 
-    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
-    private Set<TripDetails> tripDetails;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "destination_id", nullable = false)
+    @JsonIgnore
+    private Destination destination;
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
-    private Set<Itinerary> itineraries;
+    private Set<TripDetails> tripDetails = new HashSet<>();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
-    private Set<Rating> ratings;
+    private Set<Itinerary> itineraries = new HashSet<>();
+
+    @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
+    private Set<Rating> ratings = new HashSet<>();
 }

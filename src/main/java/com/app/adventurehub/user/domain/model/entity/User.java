@@ -25,16 +25,16 @@ public class User extends AuditModel {
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Reservation> reservations;
+    private Set<Reservation> reservations = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Payment> payments;
+    private Set<Payment> payments = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Notification> notifications;
+    private Set<Notification> notifications = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Rating> ratings;
+    private Set<Rating> ratings = new HashSet<>();
 
     @ManyToMany(mappedBy = "users")
     private Set<Conversation> conversations = new HashSet<>();
