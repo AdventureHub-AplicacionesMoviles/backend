@@ -5,6 +5,7 @@ import com.app.adventurehub.trip.mapping.TripMapper;
 import com.app.adventurehub.trip.resource.CreateTripResource;
 import com.app.adventurehub.trip.resource.TripResource;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/trips")
 @AllArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 public class TripController {
 
     private final TripService tripService;

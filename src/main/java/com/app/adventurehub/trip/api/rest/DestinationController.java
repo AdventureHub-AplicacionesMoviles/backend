@@ -4,6 +4,7 @@ import com.app.adventurehub.trip.domain.service.DestinationService;
 import com.app.adventurehub.trip.mapping.DestinationMapper;
 import com.app.adventurehub.trip.resource.DestinationResource;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/destinations")
 @AllArgsConstructor
+@SecurityRequirement(name = "Bearer Authentication")
 public class DestinationController {
 
     private final DestinationService destinationService;
