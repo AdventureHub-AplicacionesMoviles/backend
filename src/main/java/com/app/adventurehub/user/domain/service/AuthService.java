@@ -5,4 +5,5 @@ import com.app.adventurehub.user.resource.AuthCredentialsResource;
 
 public interface AuthService {
     User login (AuthCredentialsResource credentials);
+    User register(AuthCredentialsResource credentialsResource);
 }

@@ -4,12 +4,19 @@ import com.app.adventurehub.shared.exception.ResourceValidationException;
 import com.app.adventurehub.user.domain.model.entity.User;
 import com.app.adventurehub.user.domain.service.AuthService;
 import com.app.adventurehub.user.resource.AuthCredentialsResource;
+import com.app.adventurehub.user.resource.JwtResponse;
+import com.app.adventurehub.user.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 @RestController
 @AllArgsConstructor
@@ -18,9 +25,24 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    private AuthenticationManager manager;
+
     @PostMapping("/login")
     @Operation(summary = "Login", tags = {"Auth"})
-    public ResponseEntity<User> login(@RequestBody AuthCredentialsResource credentials) {
-        return ResponseEntity.ok(authService.login(credentials));
+    public ResponseEntity<?> login(@RequestBody AuthCredentialsResource user) {
+        Authentication authentication = manager.authenticate(
+                new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtil.generateJwtToken(authentication);
+        return ResponseEntity.ok(new JwtResponse(jwt));
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Register", tags = {"Auth"})
+    public ResponseEntity<User> register(@RequestBody AuthCredentialsResource credentials) {
+        return ResponseEntity.ok(authService.register(credentials));
     }
 }
