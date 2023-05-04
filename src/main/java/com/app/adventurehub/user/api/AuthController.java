@@ -33,6 +33,7 @@ public class AuthController {
     private AuthenticationManager manager;
     @Autowired
     private UserRepository userRepository;
+    private static final String statusBody = "User already exists";
 
     @PostMapping("/login")
     @Operation(summary = "Login", tags = {"Auth"})
@@ -47,7 +48,6 @@ public class AuthController {
     @PostMapping("/register")
     @Operation(summary = "Register", tags = {"Auth"})
     public ResponseEntity<?> register(@RequestBody AuthCredentialsResource credentials) {
-        String statusBody = "User already exists";
 
         ResponseErrorResource errorResource = new ResponseErrorResource();
         errorResource.setMessage(statusBody);
@@ -55,6 +55,7 @@ public class AuthController {
         if(userRepository.findByEmail(credentials.getEmail()) != null) {
             return ResponseEntity.badRequest().body(errorResource);
         }
+
         return ResponseEntity.ok(authService.register(credentials));
     }
 }
