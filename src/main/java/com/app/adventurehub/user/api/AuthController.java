@@ -2,9 +2,11 @@ package com.app.adventurehub.user.api;
 
 import com.app.adventurehub.shared.exception.ResourceValidationException;
 import com.app.adventurehub.user.domain.model.entity.User;
+import com.app.adventurehub.user.domain.persistence.UserRepository;
 import com.app.adventurehub.user.domain.service.AuthService;
 import com.app.adventurehub.user.resource.AuthCredentialsResource;
 import com.app.adventurehub.user.resource.JwtResponse;
+import com.app.adventurehub.user.resource.ResponseErrorResource;
 import com.app.adventurehub.user.util.JwtUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.AllArgsConstructor;
@@ -29,6 +31,8 @@ public class AuthController {
     private JwtUtil jwtUtil;
     @Autowired
     private AuthenticationManager manager;
+    @Autowired
+    private UserRepository userRepository;
 
     @PostMapping("/login")
     @Operation(summary = "Login", tags = {"Auth"})
@@ -42,7 +46,15 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Register", tags = {"Auth"})
-    public ResponseEntity<User> register(@RequestBody AuthCredentialsResource credentials) {
+    public ResponseEntity<?> register(@RequestBody AuthCredentialsResource credentials) {
+        String statusBody = "User already exists";
+
+        ResponseErrorResource errorResource = new ResponseErrorResource();
+        errorResource.setMessage(statusBody);
+
+        if(userRepository.findByEmail(credentials.getEmail()) != null) {
+            return ResponseEntity.badRequest().body(errorResource);
+        }
         return ResponseEntity.ok(authService.register(credentials));
     }
 }
