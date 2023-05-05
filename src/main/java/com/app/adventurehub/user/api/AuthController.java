@@ -19,6 +19,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import javax.validation.Valid;
+
 
 @RestController
 @AllArgsConstructor
@@ -37,7 +39,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login", tags = {"Auth"})
-    public ResponseEntity<?> login(@RequestBody AuthCredentialsResource user) {
+    public ResponseEntity<?> login(@Valid @RequestBody AuthCredentialsResource user) {
         Authentication authentication = manager.authenticate(
                 new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -47,7 +49,7 @@ public class AuthController {
 
     @PostMapping("/register")
     @Operation(summary = "Register", tags = {"Auth"})
-    public ResponseEntity<?> register(@RequestBody AuthCredentialsResource credentials) {
+    public ResponseEntity<?> register(@Valid @RequestBody AuthCredentialsResource credentials) {
 
         ResponseErrorResource errorResource = new ResponseErrorResource();
         errorResource.setMessage(statusBody);
