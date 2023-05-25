@@ -8,6 +8,7 @@ import com.app.adventurehub.trip.resource.CreateRatingResource;
 import com.app.adventurehub.trip.resource.RatingResource;
 import com.app.adventurehub.user.domain.model.entity.User;
 import com.app.adventurehub.user.domain.persistence.UserRepository;
+import com.app.adventurehub.user.mapping.UserMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +29,9 @@ public class RatingMapper implements Serializable {
     @Autowired
     TripRepository tripRepository;
 
+    @Autowired
+    UserMapper userMapper;
+
     public List<RatingResource> toResourceList(List<Rating> modelList) {
         List<RatingResource> resourceList = new java.util.ArrayList<>(modelList.size());
         modelList.forEach(model -> resourceList.add(toResource(model)));
@@ -39,6 +43,7 @@ public class RatingMapper implements Serializable {
         resource.setId(model.getId());
         resource.setComment(model.getComment());
         resource.setRating(model.getRating());
+        resource.setUser(userMapper.toResource(model.getUser()));
         return resource;
     }
 
