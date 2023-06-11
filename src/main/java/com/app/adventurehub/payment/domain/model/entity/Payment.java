@@ -1,6 +1,6 @@
 package com.app.adventurehub.payment.domain.model.entity;
 
-import com.app.adventurehub.reservation.domain.model.entity.Reservation;
+import com.app.adventurehub.booking.domain.model.entity.Booking;
 import com.app.adventurehub.user.domain.model.entity.User;
 import lombok.*;
 
@@ -31,7 +31,7 @@ public class Payment {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name="reservation_id", nullable=false)
-    private Reservation reservation;
+    @JoinColumn(name="booking_id", nullable=false)
+    private Booking booking;
 
 }

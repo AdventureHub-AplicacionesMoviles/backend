@@ -8,9 +8,7 @@ import java.util.List;
 
 public interface TripService {
     List<Trip> GetAll();
-    List<Trip> getTripByPrice(Double price);
+    Trip getTripById(Long tripId);
     Trip create(Trip trip);
-    List<Trip> getTripBySeason(String name);
-    List<Trip> getTripByDestination(String name);
     List<Trip> getTripByFilter(String destination, Seasons season, Double minPrice, Double maxPrice);
 }

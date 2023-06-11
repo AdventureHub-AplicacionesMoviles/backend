@@ -46,7 +46,7 @@ public class ItineraryMapper implements Serializable{
         resource.setLocation(model.getLocation());
         resource.setLatitude(model.getLatitude());
         resource.setLongitude(model.getLongitude());
-        resource.setActivities(activityMapper.toResourceList(model.getActivities()));
+        resource.setActivities( activityMapper.toResourceList(model.getActivities()));
         return resource;
     }
 

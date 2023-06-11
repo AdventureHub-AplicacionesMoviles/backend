@@ -1,4 +1,4 @@
-package com.app.adventurehub.reservation.resource;
+package com.app.adventurehub.booking.resource;
 
 import lombok.*;
 
@@ -8,9 +8,9 @@ import lombok.*;
 @With
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReservationResource {
+public class BookingResource {
     private Long id;
-    private String reservation_date;
+    private String date;
     private String status;
     private Integer number_of_people;
 }

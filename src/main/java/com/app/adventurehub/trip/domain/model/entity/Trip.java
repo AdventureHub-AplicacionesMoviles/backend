@@ -1,5 +1,6 @@
 package com.app.adventurehub.trip.domain.model.entity;
 
+import com.app.adventurehub.user.domain.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
@@ -33,6 +34,10 @@ public class Trip {
     private String group_size;
 
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
@@ -53,5 +58,5 @@ public class Trip {
     private Set<Itinerary> itineraries = new HashSet<>();
 
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL)
-    private Set<Rating> ratings = new HashSet<>();
+    private Set<Review> reviews = new HashSet<>();
 }

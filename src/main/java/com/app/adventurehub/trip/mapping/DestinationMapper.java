@@ -26,6 +26,7 @@ public class DestinationMapper implements Serializable {
 
     public DestinationResource toResource(Destination model) {
         DestinationResource resource = new DestinationResource();
+        resource.setId(model.getId());
         resource.setName(model.getName());
         resource.setDescription(model.getDescription());
         return resource;

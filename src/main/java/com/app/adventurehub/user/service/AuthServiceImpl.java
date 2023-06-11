@@ -20,6 +20,25 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Override
+    public String getUserMobileToken(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return user.getMobile_token();
+    }
+
+    @Override
+    public User updateUserMobileToken(String email, String mobile_token) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        user.setMobile_token(mobile_token);
+        return userRepository.save(user);
+    }
+
     public User login(AuthCredentialsResource credentials) {
         String email = credentials.getEmail();
         String password = credentials.getPassword();

@@ -1,4 +1,4 @@
-package com.app.adventurehub.reservation.resource;
+package com.app.adventurehub.booking.resource;
 
 import lombok.*;
 
@@ -9,8 +9,8 @@ import java.util.Date;
 @With
 @AllArgsConstructor
 @NoArgsConstructor
-public class CreateReservationResource {
-    private Date reservation_date;
+public class CreateBookingResource {
+    private Date date;
     private Integer number_of_people;
     private Long userId;
     private Long tripId;

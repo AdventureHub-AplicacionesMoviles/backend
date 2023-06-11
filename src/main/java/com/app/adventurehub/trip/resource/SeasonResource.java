@@ -10,6 +10,5 @@ import lombok.*;
 @AllArgsConstructor
 public class SeasonResource {
     private Long id;
-
     private Seasons name;
 }

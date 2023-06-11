@@ -16,5 +16,5 @@ public class ItineraryResource {
     private String location;
     private Double latitude;
     private Double longitude;
-    private Set<String> activities = new HashSet<>();
+    private Set<ActivityResource> activities = new HashSet<>();
 }

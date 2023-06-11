@@ -7,7 +7,7 @@ import lombok.*;
 @With
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateRatingResource {
+public class CreateReviewResource {
     Long userId;
     Long tripId;
     String comment;
