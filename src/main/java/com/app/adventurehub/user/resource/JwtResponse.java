@@ -6,8 +6,10 @@ import lombok.Data;
 public class JwtResponse {
     private String token;
     private String username;
-    public JwtResponse(String token, String username) {
+		private String role;
+    public JwtResponse(String token, String username,String role) {
         this.token = token;
         this.username = username;
+				this.role = role;
     }
 }

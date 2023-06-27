@@ -18,29 +18,30 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 public class User extends AuditModel {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String email;
-    private String password;
-    private String username;
-    private String mobile_token;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private String email;
+	private String password;
+	private String username = "Guest";
+	private String mobile_token;
+	private String role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Booking> bookings = new HashSet<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Booking> bookings = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Payment> payments = new HashSet<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Payment> payments = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Notification> notifications = new HashSet<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Notification> notifications = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Review> reviews = new HashSet<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Review> reviews = new HashSet<>();
 
-    @ManyToMany(mappedBy = "users")
-    private Set<Conversation> conversations = new HashSet<>();
+	@ManyToMany(mappedBy = "users")
+	private Set<Conversation> conversations = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private Set<Trip> trips = new HashSet<>();
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private Set<Trip> trips = new HashSet<>();
 }
