@@ -3,7 +3,9 @@ package com.app.adventurehub.booking.service;
 import com.app.adventurehub.booking.domain.model.entity.Booking;
 import com.app.adventurehub.booking.domain.persistence.BookingRepository;
 import com.app.adventurehub.booking.domain.service.BookingService;
+
 import lombok.AllArgsConstructor;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,18 +15,23 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
     private static final String ENTITY = "Bookings";
     private final BookingRepository bookingRepository;
+
     @Override
     public List<Booking> getAll() {
         return bookingRepository.findAll();
     }
 
     @Override
-    public List<Booking> getAllByUserId(Long id) {
-        return bookingRepository.findAllByUserId(id);
+    public List<Booking> getTravelerBookings(Long userId) {
+				return bookingRepository.findAllByTravelerId(userId);
+		}	
+
+		public List<Booking> getAgencyBookings(Long userId) {
+        return bookingRepository.findAllByAgencyId(userId);
     }
 
     @Override
-    public Booking create(Booking trip) {
-        return bookingRepository.save(trip);
+    public Booking create(Booking booking) {
+        return bookingRepository.save(booking);
     }
 }

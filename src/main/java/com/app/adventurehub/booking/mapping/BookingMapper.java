@@ -6,6 +6,8 @@ import com.app.adventurehub.shared.mapping.EnhancedModelMapper;
 import com.app.adventurehub.booking.domain.model.entity.Booking;
 import com.app.adventurehub.trip.domain.model.entity.Trip;
 import com.app.adventurehub.trip.domain.persistence.TripRepository;
+import com.app.adventurehub.trip.mapping.TripMapper;
+import com.app.adventurehub.trip.resource.TripResource;
 import com.app.adventurehub.user.domain.model.entity.User;
 import com.app.adventurehub.user.domain.persistence.UserRepository;
 import lombok.AllArgsConstructor;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -20,51 +23,57 @@ import java.util.stream.Collectors;
 @Component
 @AllArgsConstructor
 public class BookingMapper implements Serializable {
-    @Autowired
-    EnhancedModelMapper modelMapper;
+	@Autowired
+	EnhancedModelMapper modelMapper;
 
-    @Autowired
-    UserRepository userRepository;
+	@Autowired
+	UserRepository userRepository;
 
-    @Autowired
-    TripRepository tripRepository;
+	@Autowired
+	TripRepository tripRepository;
 
-    public BookingMapper bookingMapper() {
-        return new BookingMapper(modelMapper, userRepository, tripRepository);
-    }
+	@Autowired
+	TripMapper tripMapper;
 
-    public BookingResource toResource(Booking model){
-        BookingResource resource = new BookingResource();
-        resource.setId(model.getId());
-        resource.setNumber_of_people(model.getNumber_of_people());
+	public BookingMapper bookingMapper() {
+		return new BookingMapper(modelMapper, userRepository, tripRepository, tripMapper);
+	}
 
-        return resource;
-    }
+	public BookingResource toResource(Booking model) {
+		Long tripId = model.getTrip().getId();
+		Trip trip = tripRepository.findById(tripId).get();
+		TripResource tripResource = tripMapper.toResource(trip);
+		BookingResource resource = new BookingResource();
+		resource.setId(model.getId());
+		resource.setStatus(model.getStatus());
+		resource.setDate(model.getDate());
+		resource.setStatus(model.getStatus());
+		resource.setThumbnail(tripResource.getThumbnail());
+		resource.setTripName(tripResource.getName());
+		resource.setPrice(tripResource.getPrice());
 
-    public Booking toModel(CreateBookingResource resource) {
-        Booking model = new Booking();
-        model.setDate(resource.getDate());
-        model.setStatus(resource.getStatus());
-        model.setNumber_of_people(resource.getNumber_of_people());
+		return resource;
+	}
 
-        Optional<User> user = userRepository.findById(resource.getUserId());
-        if (!user.isPresent()) {
-            throw new RuntimeException("User not found");
-        }
+	public List<BookingResource> toResources(List<Booking> modelList) {
+		return modelList.stream().map(this::toResource).collect(Collectors.toList());
+	}
 
-        Optional<Trip> trip = tripRepository.findById(resource.getTripId());
-        if (!trip.isPresent()) {
-            throw new RuntimeException("Trip not found");
-        }
+	public Booking toModel(CreateBookingResource resource, Long userId) {
+		Booking model = new Booking();
+		model.setNumberOfPeople(resource.getNumberOfPeople());
+		model.setDate(new Date());
+		model.setStatus("CONFIRMED");
 
-        model.setUser(user.get());
-        model.setTrip(trip.get());
+		Optional<User> user = userRepository.findById(userId);
+		model.setUser(user.get());
+		Optional<Trip> trip = tripRepository.findById(resource.getTripId());
+		model.setTrip(trip.get());
 
-        return model;
+		return model;
+	}
 
-    }
-
-    public List<BookingResource> toResourceList(List<Booking> modelList){
-        return modelList.stream().map(this::toResource).collect(Collectors.toList());
-    }
+	public List<BookingResource> toResourceList(List<Booking> modelList) {
+		return modelList.stream().map(this::toResource).collect(Collectors.toList());
+	}
 }
