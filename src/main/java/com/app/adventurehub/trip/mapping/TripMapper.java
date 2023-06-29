@@ -138,6 +138,10 @@ public class TripMapper implements Serializable {
         return trip;
     }
 
+		public List<Trip> toModelList(List<CreateTripResource> resources) {
+				return resources.stream().map(this::toModel).collect(Collectors.toList());
+		}
+
     private Trip createTripFromResource(CreateTripResource resource) {
         Season season = seasonRepository.findById(resource.getSeasonId())
                 .orElseThrow(() -> new RuntimeException("Season not found"));

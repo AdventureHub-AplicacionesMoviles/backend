@@ -5,6 +5,7 @@ import com.app.adventurehub.trip.domain.model.entity.Trip;
 import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
 import com.app.adventurehub.trip.domain.persistence.TripRepository;
 import com.app.adventurehub.trip.domain.service.TripService;
+
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -59,4 +60,8 @@ public class TripServiceImpl implements TripService {
 
         return tripRepository.save(trip);
     }
+
+		public List<Trip> createTrips(List<Trip> trips) {
+			return tripRepository.saveAll(trips);
+		}
 }

@@ -22,35 +22,44 @@ import java.util.List;
 @SecurityRequirement(name = "Bearer Authentication")
 public class TripController {
 
-    private final TripService tripService;
-    private final TripMapper mapper;
+	private final TripService tripService;
+	private final TripMapper mapper;
 
-    @GetMapping
-    @Operation(summary = "Get All Trips", tags = {"Trips"} )
-    public List<TripResource> getAllTrips(){
-        return mapper.toResourceList(tripService.GetAll());
-    }
+	@GetMapping
+	@Operation(summary = "Get All Trips", tags = { "Trips" })
+	public List<TripResource> getAllTrips() {
+		return mapper.toResourceList(tripService.GetAll());
+	}
 
-    @GetMapping("/{tripId}")
-    @Operation(summary ="Get Trip by Id", tags = {"Trips"})
-    public TripAggregateResource getTripById(@PathVariable(value ="tripId") Long tripId) { return mapper.toAggregateResource(tripService.getTripById(tripId));}
+	@GetMapping("/{tripId}")
+	@Operation(summary = "Get Trip by Id", tags = { "Trips" })
+	public TripAggregateResource getTripById(@PathVariable(value = "tripId") Long tripId) {
+		return mapper.toAggregateResource(tripService.getTripById(tripId));
+	}
 
-    @GetMapping("/filter")
-    @Operation(summary = "Get Trip By Filter", tags = {"Trips"})
-    public List<TripResource> getTripByFilter(
-            @RequestParam(value ="destination",required = false) String destination,
-            @RequestParam(value ="season",required = false) Seasons season,
-            @RequestParam(value ="minPrice") Double minPrice,
-            @RequestParam(value ="maxPrice") Double maxPrice){
+	@GetMapping("/filter")
+	@Operation(summary = "Get Trip By Filter", tags = { "Trips" })
+	public List<TripResource> getTripByFilter(
+			@RequestParam(value = "destination", required = false) String destination,
+			@RequestParam(value = "season", required = false) Seasons season,
+			@RequestParam(value = "minPrice") Double minPrice,
+			@RequestParam(value = "maxPrice") Double maxPrice) {
 
-        return mapper.toResourceList(tripService.getTripByFilter(destination, season, minPrice, maxPrice));
-    }
+		return mapper.toResourceList(tripService.getTripByFilter(destination, season, minPrice, maxPrice));
+	}
 
-    @PostMapping
-    @Operation(summary = "Create Trip", tags = {"Trips"})
-    public ResponseEntity<TripResource> createTrip(@Valid @RequestBody CreateTripResource resource){
-        return new ResponseEntity<>(mapper.toResource(tripService.create(mapper.toModel(resource))), HttpStatus.CREATED);
-    }
+	@PostMapping
+	@Operation(summary = "Create Trip", tags = { "Trips" })
+	public ResponseEntity<TripResource> createTrip(@Valid @RequestBody CreateTripResource resource) {
+		return new ResponseEntity<>(mapper.toResource(tripService.create(mapper.toModel(resource))), HttpStatus.CREATED);
+	}
 
+	@PostMapping("/bulk")
+	@Operation(summary = "Create Trips", tags = { "Trips" })
+	public ResponseEntity<List<TripResource>> createTrips(@Valid @RequestBody List<CreateTripResource> resources) {
+		System.out.println(resources.get(0).getName());
+		return new ResponseEntity<>(mapper.toResourceList(tripService.createTrips(mapper.toModelList(resources))),
+				HttpStatus.CREATED);
+	}
 
 }
