@@ -51,6 +51,14 @@ public class AuthController {
 		return mapper.toResource(authService.updateUserMobileToken(email, resource.getMobile_token()));
 	}
 
+	@PutMapping("/user/email")
+	@Operation(summary = "Update User Email", tags = { "Auth" })
+	public UserResource updateUserEmail(@RequestParam(value = "currentEmail") String currentEmail,
+										@RequestBody UpdateEmailResource resource) {
+		return mapper.toResource(authService.updateUserEmail(currentEmail, resource.getNewEmail()));
+	}
+
+
 	@PostMapping("/login")
 	@Operation(summary = "Login", tags = { "Auth" })
 	public ResponseEntity<?> login(@Valid @RequestBody AuthCredentialsResource resource) {

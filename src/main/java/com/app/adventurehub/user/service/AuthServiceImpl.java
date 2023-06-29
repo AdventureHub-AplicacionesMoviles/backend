@@ -39,6 +39,22 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.save(user);
     }
 
+    @Override
+    public User updateUserEmail(String currentEmail, String newEmail) {
+        User user = userRepository.findByEmail(currentEmail);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        User existingUser = userRepository.findByEmail(newEmail);
+        if (existingUser != null && !existingUser.equals(user)) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        user.setEmail(newEmail);
+        return userRepository.save(user);
+    }
+
+
     public User login(AuthCredentialsResource credentials) {
         String email = credentials.getEmail();
         String password = credentials.getPassword();
