@@ -32,10 +32,6 @@ public class CreateTripResource {
     @Size(max= 255)
     private String description;
 
-    @NotNull
-    @NotBlank
-    private String difficulty;
-
     @Positive
     @DecimalMin(value = "50.00")
     @DecimalMax(value = "999999.99")
@@ -53,6 +49,9 @@ public class CreateTripResource {
 
     @NotNull
     private Long destinationId;
+
+    @NotNull
+    private Long userId;
 
     @NotNull
     @NotEmpty

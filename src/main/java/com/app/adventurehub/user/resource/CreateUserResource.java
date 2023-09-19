@@ -10,4 +10,5 @@ import lombok.*;
 public class CreateUserResource {
     private String email;
     private String password;
+		private String role;
 }

@@ -1,4 +1,4 @@
-package com.app.adventurehub.reservation.domain.model.entity;
+package com.app.adventurehub.booking.domain.model.entity;
 
 import com.app.adventurehub.payment.domain.model.entity.Payment;
 import com.app.adventurehub.trip.domain.model.entity.Trip;
@@ -16,13 +16,13 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "reservation")
-public class Reservation {
+@Table(name = "booking")
+public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Date reservation_date;
+    private Date date;
     private String status;
     private Integer number_of_people;
 
@@ -34,7 +34,7 @@ public class Reservation {
     @JoinColumn(name="trip_id", nullable=false)
     private Trip trip;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "booking", cascade = CascadeType.PERSIST)
     private Set<Payment> payments = new HashSet<>();
 
 }

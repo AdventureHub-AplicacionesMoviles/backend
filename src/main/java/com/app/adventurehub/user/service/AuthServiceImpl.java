@@ -20,6 +20,41 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private PasswordEncoder encoder;
 
+    @Override
+    public String getUserMobileToken(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        return user.getMobile_token();
+    }
+
+    @Override
+    public User updateUserMobileToken(String email, String mobile_token) {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        user.setMobile_token(mobile_token);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User updateUserEmail(String currentEmail, String newEmail) {
+        User user = userRepository.findByEmail(currentEmail);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found");
+        }
+        User existingUser = userRepository.findByEmail(newEmail);
+        if (existingUser != null && !existingUser.equals(user)) {
+            throw new IllegalArgumentException("Email already exists");
+        }
+
+        user.setEmail(newEmail);
+        return userRepository.save(user);
+    }
+
+
     public User login(AuthCredentialsResource credentials) {
         String email = credentials.getEmail();
         String password = credentials.getPassword();
@@ -39,6 +74,7 @@ public class AuthServiceImpl implements AuthService {
         User registeredUser = new User();
         registeredUser.setEmail(credentialsResource.getEmail());
         registeredUser.setPassword(encoder.encode(credentialsResource.getPassword()));
+				registeredUser.setRole(credentialsResource.getRole());
         registeredUser = userRepository.save(registeredUser);
         return registeredUser;
     }

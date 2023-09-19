@@ -73,6 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .and().cors().and().csrf().disable().authorizeRequests()
                 .antMatchers("/api/v1/auth/**").permitAll()
+                .antMatchers("/api/v1/notification/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();

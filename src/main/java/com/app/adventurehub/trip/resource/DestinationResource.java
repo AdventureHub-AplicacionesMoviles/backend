@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DestinationResource {
+    private Long id;
     private String name;
     private String description;
 }

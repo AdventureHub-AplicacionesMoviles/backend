@@ -11,4 +11,5 @@ public class UserResource {
 
     private Long id;
     private String email;
+
 }

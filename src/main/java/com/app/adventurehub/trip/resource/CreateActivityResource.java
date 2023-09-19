@@ -5,11 +5,9 @@ import lombok.*;
 @Getter
 @Setter
 @With
-@NoArgsConstructor
 @AllArgsConstructor
-public class ActivityResource {
-    private Long id;
+@NoArgsConstructor
+public class CreateActivityResource {
     private String name;
     private String description;
 }
-

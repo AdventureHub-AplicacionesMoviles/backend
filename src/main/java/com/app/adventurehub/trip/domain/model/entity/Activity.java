@@ -19,12 +19,10 @@ public class Activity {
     @Column(nullable = false, length = 255)
     private String name;
 
+    @Column(nullable = false, length = 255)
+    private String description;
+
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name="itinerary_id", nullable = false)
     private Itinerary itinerary;
-
-    public Activity(String name, Itinerary itinerary) {
-        this.name = name;
-        this.itinerary = itinerary;
-    }
 }

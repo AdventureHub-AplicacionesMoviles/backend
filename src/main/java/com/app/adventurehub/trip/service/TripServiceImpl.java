@@ -2,17 +2,15 @@ package com.app.adventurehub.trip.service;
 
 import com.app.adventurehub.shared.exception.ResourceValidationException;
 import com.app.adventurehub.trip.domain.model.entity.Trip;
-import com.app.adventurehub.trip.domain.persistence.SeasonRepository;
+import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
 import com.app.adventurehub.trip.domain.persistence.TripRepository;
 import com.app.adventurehub.trip.domain.service.TripService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.Validator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -26,14 +24,26 @@ public class TripServiceImpl implements TripService {
     }
 
     @Override
-    public List<Trip> getTripByPrice(Double price) {
-        return tripRepository.findAllByPrice(price);
+    public Trip getTripById(Long tripId) {
+        HashMap<String, List<String>> errors = new HashMap<>();
+        Optional<Trip> trip = tripRepository.findById(tripId);
+
+        if(!trip.isPresent()) {
+            errors.put(ENTITY, List.of("Trip not found"));
+        }
+
+        if(!errors.isEmpty()) {
+            throw new ResourceValidationException(ENTITY,errors);
+        }
+
+        return trip.get();
     }
 
     @Override
-    public List<Trip> getTripBySeason(String name) {
-        return tripRepository.findAllBySeason(name);
+    public List<Trip> getTripByFilter(String destination, Seasons season, Double minPrice, Double maxPrice) {
+        return tripRepository.findAllByFilter(destination, season, minPrice, maxPrice);
     }
+
     @Override
     public Trip create(Trip trip) {
         HashMap<String, List<String>> errors = new HashMap<>();

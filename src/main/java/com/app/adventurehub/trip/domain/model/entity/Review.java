@@ -1,5 +1,6 @@
 package com.app.adventurehub.trip.domain.model.entity;
 
+import com.app.adventurehub.shared.domain.model.AuditModel;
 import com.app.adventurehub.user.domain.model.entity.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
@@ -12,8 +13,8 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "rating")
-public class Rating {
+@Table(name = "review")
+public class Review extends AuditModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

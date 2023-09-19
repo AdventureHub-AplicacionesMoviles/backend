@@ -20,5 +20,5 @@ public class CreateItineraryResource {
     @NotNull
     @NotEmpty
     @Size(min=1,max=10)
-    private Set<String> activities = new HashSet<>();
+    private Set<CreateActivityResource> activities = new HashSet<>();
 }

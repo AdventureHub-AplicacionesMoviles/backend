@@ -35,6 +35,10 @@ public class UserMapper implements Serializable {
         return modelMapper.map(resource, User.class);
     }
 
+    public String toResourceString(User user) {
+        return user.getUsername();
+    }
+
     public UserResource toResource(User user) {
         return new UserResource(user.getId(), user.getEmail());
     }
