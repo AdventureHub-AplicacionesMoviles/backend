@@ -112,6 +112,15 @@
             <artifactId>hibernate-core</artifactId>
         </dependency>
 
+        <!-- JDBC-->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-jdbc -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <version>6.0.11</version>
+        </dependency>
+
+
 
     </dependencies>
 

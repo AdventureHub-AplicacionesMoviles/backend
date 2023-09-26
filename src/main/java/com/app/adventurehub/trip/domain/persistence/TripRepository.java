@@ -11,8 +11,16 @@ import java.util.List;
 
 @Repository
 public interface TripRepository extends JpaRepository<Trip, Long> {
-    @Query("SELECT t FROM Trip t WHERE t.name = :name")
-    Trip findByName(@Param("name") String name);
-    @Query("SELECT t FROM Trip t WHERE (t.season.name = :season OR :season IS NULL) AND (t.destination.name = :destination OR :destination IS NULL) AND  t.price >= :minPrice AND t.price <= :maxPrice")
-    List<Trip> findAllByFilter(String destination, Seasons season, Double minPrice, Double maxPrice);
+	@Query("SELECT t FROM Trip t WHERE t.name = :name")
+	Trip findByName(@Param("name") String name);
+
+	List<Trip> findByDestinationContainingAndSeasonAndPriceBetween(
+			String destination, String season, Double minPrice, Double maxPrice);
+
+	@Query("SELECT t FROM Trip t WHERE (t.season.name = :season OR :season IS NULL) AND (t.destination.name = :destination OR :destination IS NULL) AND  t.price >= :minPrice AND t.price <= :maxPrice")
+	List<Trip> findAllByFilter(String destination, Seasons season, Double minPrice, Double maxPrice);
+
+	@Query("SELECT t FROM Trip t WHERE t.user.id = :agencyId")
+	List<Trip> findAllByAgencyId(@Param("agencyId") Long agencyId);
+
 }

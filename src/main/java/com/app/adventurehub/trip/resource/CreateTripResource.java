@@ -13,47 +13,47 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateTripResource {
-    @NotNull
+    @NotBlank(message = "Start date is required")
     private Date start_date;
 
-    @NotNull
-    @FutureOrPresent
+    @NotBlank(message = "End date is required")
+    @FutureOrPresent(message = "End date must be present or future")
     private Date end_date;
 
-    private String status = "A";
-
-    @NotNull
-    @NotBlank
-    @Size(max= 50)
+    @NotBlank(message = "Name is required")
+    @Size(max= 50, message = "Name must be less than 50 characters")
     private String name;
 
-    @NotNull
-    @NotBlank
-    @Size(max= 255)
+    @NotBlank(message = "Description is required")
+    @Size(max= 255, message = "Description must be less than 255 characters")
     private String description;
 
-    @Positive
+    @Positive(message = "Price must be positive")
     @DecimalMin(value = "50.00")
     @DecimalMax(value = "999999.99")
     private Double price;
 
-    @NotNull
-    @NotBlank
+    @Positive(message = "Group size must be positive")
+    @NotBlank(message = "Group size is required")
     private String group_size;
 
-    @NotNull
+    @Positive(message = "Stock must be positive")
+    @NotNull(message = "Stock is required")
+    private Long stock;
+
+    @NotNull(message = "Season is required")
     private Long seasonId;
 
-    @NotNull
+    @NotNull(message = "Category is required")
     private Long categoryId;
 
-    @NotNull
+    @NotNull(message = "Destination is required")
     private Long destinationId;
 
-    @NotNull
+    @NotNull(message = "User is required")
     private Long userId;
 
-    @NotNull
+    @NotBlank
     @NotEmpty
     @Size(min=1,max=5)
     private Set<String> images = new HashSet<>();

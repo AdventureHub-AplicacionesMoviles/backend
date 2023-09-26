@@ -6,9 +6,19 @@ import com.app.adventurehub.trip.domain.model.enumeration.Seasons;
 import java.util.List;
 
 public interface TripService {
-    List<Trip> GetAll();
-    Trip getTripById(Long tripId);
-    Trip create(Trip trip);
-		List<Trip> createTrips(List<Trip> trips);
-    List<Trip> getTripByFilter(String destination, Seasons season, Double minPrice, Double maxPrice);
+	List<Trip> getAll();
+
+	List<Trip> getFilteredTrips(String destination, String season, Double minPrice, Double maxPrice);
+
+	Trip getTripById(Long tripId);
+
+	List<Trip> getTripsByAgency(Long agencyId);
+
+	List<Trip> getTripsByTraveler(Long travelerId);
+
+	Trip bookTrip(Long tripId);
+
+	Trip create(Trip trip);
+
+	List<Trip> createTrips(List<Trip> trips);
 }

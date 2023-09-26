@@ -10,9 +10,3 @@ public class PushNotificationRequest {
     private Object data;
     private String to;
 }
-
-@Getter
-class Notification {
-    private String title;
-    private String body;
-}

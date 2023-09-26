@@ -1,5 +1,6 @@
 package com.app.adventurehub.booking.domain.model.entity;
 
+import com.app.adventurehub.booking.enums.BookingStatus;
 import com.app.adventurehub.trip.domain.model.entity.Trip;
 import com.app.adventurehub.user.domain.model.entity.User;
 import lombok.*;
@@ -18,15 +19,13 @@ public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Date date;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
     private Long numberOfPeople;
-
     @ManyToOne
     @JoinColumn(name="user_id", nullable=false)
     private User user;
-
     @ManyToOne
     @JoinColumn(name="trip_id", nullable=false)
     private Trip trip;

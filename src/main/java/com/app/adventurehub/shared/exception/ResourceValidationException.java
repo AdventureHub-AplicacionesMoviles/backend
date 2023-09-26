@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import javax.annotation.Resource;
 import javax.validation.ConstraintViolation;
 import java.util.HashMap;
 import java.util.List;
@@ -41,9 +42,5 @@ public class ResourceValidationException extends RuntimeException {
 
     public ResourceValidationException(String resourceName, String message) {
         super(String.format("Not all constraints satisfied for %s: %s", resourceName, message));
-    }
-
-    public ResourceValidationException(String entity, String id, Long id1) {
-        super(String.format("Not all constraints satisfied for %s: %s", entity, id));
     }
 }
