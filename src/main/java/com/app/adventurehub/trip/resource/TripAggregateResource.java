@@ -1,5 +1,6 @@
 package com.app.adventurehub.trip.resource;
 
+import com.app.adventurehub.trip.TripStatus;
 import com.app.adventurehub.trip.domain.model.entity.Destination;
 import com.app.adventurehub.trip.domain.model.entity.Season;
 import lombok.*;
@@ -18,7 +19,7 @@ public class TripAggregateResource {
     private String name;
     private String description;
     private Double price;
-    private String status;
+    private TripStatus status;
     private Date start_date;
     private Date end_date;
     private String group_size;

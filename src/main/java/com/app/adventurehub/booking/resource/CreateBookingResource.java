@@ -2,7 +2,8 @@ package com.app.adventurehub.booking.resource;
 
 import lombok.*;
 
-import java.util.Date;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @Getter
 @Setter
@@ -10,9 +11,9 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CreateBookingResource {
-    private Date date;
-    private Integer number_of_people;
-    private Long userId;
-    private Long tripId;
-    private String status = "A";
+	@Positive(message = "Number of people must be positive")
+	@NotNull(message = "Number of people is required")
+	private Long numberOfPeople = 1L;
+	@NotNull(message = "Trip is required")
+	private Long tripId;
 }

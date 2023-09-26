@@ -29,15 +29,17 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers, HttpStatus status,
                                                                   WebRequest request) {
-        HashMap<String,List<String>> errors = new HashMap<String,List<String>>();
+        HashMap<String, List<String>> errors = new HashMap<>();
+
         for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            if (errors.containsKey(error.getField())) {
-                errors.get(error.getField()).add(error.getDefaultMessage());
-            } else {
-                List<String> errorList = new ArrayList<String>();
-                errorList.add(error.getDefaultMessage());
-                errors.put(error.getField(), errorList);
+            String fieldName = error.getField();
+            String errorMessage = error.getDefaultMessage();
+
+            if (!errors.containsKey(fieldName)) {
+                errors.put(fieldName, new ArrayList<>());
             }
+
+            errors.get(fieldName).add(errorMessage);
         }
 
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST, "Validation failed", errors);

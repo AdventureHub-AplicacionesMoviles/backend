@@ -1,82 +1,77 @@
 package com.app.adventurehub.user.service;
 
-
+import com.app.adventurehub.shared.exception.ResourceValidationException;
 import com.app.adventurehub.user.domain.model.entity.User;
 import com.app.adventurehub.user.domain.persistence.UserRepository;
 import com.app.adventurehub.user.domain.service.AuthService;
 import com.app.adventurehub.user.resource.AuthCredentialsResource;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.app.adventurehub.user.resource.JwtResponse;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import com.app.adventurehub.user.util.JwtUtil;
 import org.springframework.stereotype.Service;
+import lombok.AllArgsConstructor;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
+    private static final String ENTITY = "User";
 
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
+    private UserServiceImpl userService;
+    private UserRepository userRepository;
+    private JdbcTemplate jdbcTemplate;
+    private JwtUtil jwtUtil;
+    private AuthenticationManager manager;
     private PasswordEncoder encoder;
 
     @Override
-    public String getUserMobileToken(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-        return user.getMobile_token();
-    }
-
-    @Override
-    public User updateUserMobileToken(String email, String mobile_token) {
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
+    public User updateUserMobileToken(String mobile_token) {
+        Long userId = userService.getUserIdFromSecurityContext();
+        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceValidationException("User not found"));
         user.setMobile_token(mobile_token);
         return userRepository.save(user);
     }
 
     @Override
-    public User updateUserEmail(String currentEmail, String newEmail) {
-        User user = userRepository.findByEmail(currentEmail);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-        User existingUser = userRepository.findByEmail(newEmail);
-        if (existingUser != null && !existingUser.equals(user)) {
-            throw new IllegalArgumentException("Email already exists");
-        }
-
-        user.setEmail(newEmail);
-        return userRepository.save(user);
-    }
-
-
-    public User login(AuthCredentialsResource credentials) {
-        String email = credentials.getEmail();
-        String password = credentials.getPassword();
-
-        User user = userRepository.findByEmail(email);
-        if (user == null) {
-            throw new IllegalArgumentException("User not found");
-        }
-        if (!user.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Wrong password");
-        }
-        return user;
+    public User getUser() {
+        Long userId = userService.getUserIdFromSecurityContext();
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceValidationException("User not found"));
     }
 
     @Override
-    public User register(AuthCredentialsResource credentialsResource) {
-        User registeredUser = new User();
-        registeredUser.setEmail(credentialsResource.getEmail());
-        registeredUser.setPassword(encoder.encode(credentialsResource.getPassword()));
-				registeredUser.setRole(credentialsResource.getRole());
-        registeredUser = userRepository.save(registeredUser);
-        return registeredUser;
+    public JwtResponse login(AuthCredentialsResource credentials) {
+        Authentication authentication = manager.authenticate(
+                new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtil.generateJwtToken(authentication);
+        return new JwtResponse(jwt);
+    }
+
+    @Override
+    public User register(AuthCredentialsResource credentials) {
+        HashMap<String, List<String>> errors = new HashMap<>();
+
+        if (userRepository.findByEmail(credentials.getEmail()) != null) {
+            errors.put("email", List.of("email is already taken"));
+            throw new ResourceValidationException(ENTITY, errors);
+        }
+
+        User userSaved = userRepository.save(new User()
+                        .withEmail(credentials.getEmail())
+                        .withPassword(encoder.encode(credentials.getPassword()))
+                                .withUsername("Guest" + UUID.randomUUID()));
+
+        jdbcTemplate.execute("INSERT INTO users_roles (user_id, role_id) VALUES (" + userSaved.getId() + ", " + credentials.getRole().getRoleId() + ")");
+
+        return userSaved;
     }
 
 }

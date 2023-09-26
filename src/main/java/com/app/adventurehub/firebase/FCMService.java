@@ -32,9 +32,7 @@ public class FCMService
 
         String mobileToken = userRepository.findByUsername(body.getTo()).getMobile_token();
 
-        String payloadJson;
-
-        payloadJson = "" +
+        String payloadJson = "" +
                 "{\n" +
                 "  \"to\": \"" + mobileToken + "\",\n" +
                 "  \"notification\": {\n" +

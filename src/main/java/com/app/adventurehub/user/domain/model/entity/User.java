@@ -14,6 +14,7 @@ import java.util.Set;
 
 @Getter
 @Setter
+@With
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -23,9 +24,8 @@ public class User extends AuditModel {
 	private Long id;
 	private String email;
 	private String password;
-	private String username = "Guest";
+	private String username;
 	private String mobile_token;
-	private String role;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Booking> bookings = new HashSet<>();
@@ -44,4 +44,12 @@ public class User extends AuditModel {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private Set<Trip> trips = new HashSet<>();
+
+	@ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@JoinTable(
+			name = "users_roles",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "role_id")
+	)
+	private Set<Role> roles = new HashSet<>();
 }

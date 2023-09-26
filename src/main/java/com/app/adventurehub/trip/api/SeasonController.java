@@ -1,4 +1,4 @@
-package com.app.adventurehub.trip.api.rest;
+package com.app.adventurehub.trip.api;
 
 import com.app.adventurehub.trip.domain.service.SeasonService;
 

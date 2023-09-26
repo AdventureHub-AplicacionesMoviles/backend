@@ -2,7 +2,6 @@ package com.app.adventurehub.user.mapping;
 
 import com.app.adventurehub.shared.mapping.EnhancedModelMapper;
 import com.app.adventurehub.user.domain.model.entity.User;
-import com.app.adventurehub.user.resource.CreateUserResource;
 import com.app.adventurehub.user.resource.UserResource;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +30,13 @@ public class UserMapper implements Serializable {
         return new PageImpl<>(modelMapper.mapList(modelList, UserResource.class), pageable, modelList.size());
     }
 
-    public User toModel(CreateUserResource resource) {
-        return modelMapper.map(resource, User.class);
-    }
-
-    public String toResourceString(User user) {
-        return user.getUsername();
-    }
-
     public UserResource toResource(User user) {
-        return new UserResource(user.getId(), user.getEmail());
+        return new UserResource()
+                .withId(user.getId())
+                .withEmail(user.getEmail())
+                .withUsername(user.getUsername())
+                .withMobile_token(user.getMobile_token())
+                .withAuthorities(user.getRoles());
     }
 
 }

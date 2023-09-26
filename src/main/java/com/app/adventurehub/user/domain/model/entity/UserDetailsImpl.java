@@ -5,25 +5,18 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
     private final Long id;
-
     private final String email;
-
     @JsonIgnore
     private final String password;
+    private final List<GrantedAuthority> authorities;
 
-    private final Collection<? extends GrantedAuthority> authorities;
-
-    public UserDetailsImpl(Long id, String email, String password,
-                           Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(Long id, String email, String password, List<GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -31,8 +24,12 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(User user) {
+        Set<Role> roles = user.getRoles();
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("USER"));
+
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
+        }
 
         return new UserDetailsImpl(
                 user.getId(),
@@ -52,13 +49,11 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-        return password;
+        return this.password;
     }
 
     @Override
-    public String getUsername() {
-        return email;
-    }
+    public String getUsername() { return this.email; }
 
     @Override
     public boolean isAccountNonExpired() {
