@@ -16,7 +16,6 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
     private static final String ENTITY = "Bookings";
 
-    @Autowired
     private final TripService tripService;
     private final BookingRepository bookingRepository;
 

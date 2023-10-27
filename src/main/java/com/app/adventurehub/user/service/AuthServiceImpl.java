@@ -23,55 +23,58 @@ import java.util.UUID;
 @Service
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private static final String ENTITY = "User";
+	private static final String ENTITY = "User";
 
-    private UserServiceImpl userService;
-    private UserRepository userRepository;
-    private JdbcTemplate jdbcTemplate;
-    private JwtUtil jwtUtil;
-    private AuthenticationManager manager;
-    private PasswordEncoder encoder;
+	private UserServiceImpl userService;
+	private UserRepository userRepository;
+	private JdbcTemplate jdbcTemplate;
+	private JwtUtil jwtUtil;
+	private AuthenticationManager manager;
+	private PasswordEncoder encoder;
 
-    @Override
-    public User updateUserMobileToken(String mobile_token) {
-        Long userId = userService.getUserIdFromSecurityContext();
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceValidationException("User not found"));
-        user.setMobile_token(mobile_token);
-        return userRepository.save(user);
-    }
+	@Override
+	public User updateUserMobileToken(String mobile_token) {
+		Long userId = userService.getUserIdFromSecurityContext();
+		User user = userRepository.findById(userId).orElseThrow(() -> new ResourceValidationException("User not found"));
+		user.setMobile_token(mobile_token);
+		return userRepository.save(user);
+	}
 
-    @Override
-    public User getUser() {
-        Long userId = userService.getUserIdFromSecurityContext();
-        return userRepository.findById(userId).orElseThrow(() -> new ResourceValidationException("User not found"));
-    }
+	@Override
+	public User getUser() {
+		Long userId = userService.getUserIdFromSecurityContext();
+		return userRepository.findById(userId).orElseThrow(() -> new ResourceValidationException("User not found"));
+	}
 
-    @Override
-    public JwtResponse login(AuthCredentialsResource credentials) {
-        Authentication authentication = manager.authenticate(
-                new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtil.generateJwtToken(authentication);
-        return new JwtResponse(jwt);
-    }
+	@Override
+	public JwtResponse login(AuthCredentialsResource credentials) {
+		Authentication authentication = manager.authenticate(
+				new UsernamePasswordAuthenticationToken(credentials.getEmail(), credentials.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		String jwt = jwtUtil.generateJwtToken(authentication);
+		return new JwtResponse(jwt);
+	}
 
-    @Override
-    public User register(AuthCredentialsResource credentials) {
-        HashMap<String, List<String>> errors = new HashMap<>();
+	@Override
+	public User register(AuthCredentialsResource credentials) {
+		HashMap<String, List<String>> errors = new HashMap<>();
 
-        if (userRepository.findByEmail(credentials.getEmail()) != null) {
-            errors.put("email", List.of("email is already taken"));
-            throw new ResourceValidationException(ENTITY, errors);
-        }
+		if (userRepository.findByEmail(credentials.getEmail()) != null) {
+			errors.put("email", List.of("email is already taken"));
+			throw new ResourceValidationException(ENTITY, errors);
+		}
 
-        User userSaved = userRepository.save(new User()
-                        .withEmail(credentials.getEmail())
-                        .withPassword(encoder.encode(credentials.getPassword()))
-                                .withUsername("Guest" + UUID.randomUUID()));
+		User userSaved = userRepository.save(new User()
+				.withEmail(credentials.getEmail())
+				.withPassword(encoder.encode(credentials.getPassword())));
 
-        jdbcTemplate.execute("INSERT INTO users_roles (user_id, role_id) VALUES (" + userSaved.getId() + ", " + credentials.getRole().getRoleId() + ")");
+		userSaved.setUsername("Guest-" + userSaved.getId());
+		userRepository.save(userSaved);
 
-        return userSaved;
-    }
+		jdbcTemplate.execute("INSERT INTO users_roles (user_id, role_id) VALUES (" + userSaved.getId() + ", "
+				+ credentials.getRole().getRoleId() + ")");
+
+		return userSaved;
+	}
 
 }

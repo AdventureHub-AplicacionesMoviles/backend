@@ -1,5 +1,6 @@
 package com.app.adventurehub.booking.api;
 
+import com.app.adventurehub.booking.domain.model.entity.Booking;
 import com.app.adventurehub.booking.domain.service.BookingService;
 import com.app.adventurehub.booking.mapping.BookingMapper;
 import com.app.adventurehub.booking.resource.CreateBookingResource;
@@ -31,20 +32,26 @@ public class BookingController {
 	}
 
 	/*
- * Para los usuarios viajeros se debe mostrar la lista de reservas que ha realizado
- * Para los usuarios agencia se debe mostrar la lista de reservas que ha recibido
- */
-//	@GetMapping("/my-bookings")
-//	@Operation(summary = "Get Bookings by User ID", tags = { "Bookings" })
-//	public ResponseEntity<List<BookingResource>> getBookingsByUserId() {
-//		Long userId = userService.getUserIdFromSecurityContext();
-//		List<Booking> bookings = userService.isAgency()
-//								? bookingService.getAgencyBookings(userId)
-//								: bookingService.getTravelerBookings(userId);
-//		List<BookingResource> resources = mapper.toResources(bookings);
-//
-//		return new ResponseEntity<>(resources, HttpStatus.OK);
-//	}
+	 * Para los usuarios viajeros se debe mostrar la lista de reservas que ha
+	 * realizado
+	 * Para los usuarios agencia se debe mostrar la lista de reservas que ha
+	 * recibido
+	 */
+	@GetMapping("/my-bookings")
+	@Operation(summary = "Get Bookings by User ID", tags = { "Bookings" })
+	public ResponseEntity<List<BookingResource>> getBookingsByUserId(
+			@RequestParam(value = "role", required = false) String role) {
+		Long userId = userService.getUserIdFromSecurityContext();
+		List<Booking> bookings;
+		if (role != null && role.equalsIgnoreCase("AGENCY")) {
+			bookings = bookingService.getAgencyBookings(userId);
+		} else {
+			bookings = bookingService.getTravelerBookings(userId);
+		}
+		List<BookingResource> resources = mapper.toResources(bookings);
+
+		return new ResponseEntity<>(resources, HttpStatus.OK);
+	}
 
 	@PostMapping
 	@PreAuthorize("hasAuthority('TRAVELER')")

@@ -1,7 +1,6 @@
 package com.app.adventurehub.booking.domain.service;
 
 import com.app.adventurehub.booking.domain.model.entity.Booking;
-import com.app.adventurehub.booking.resource.CreateBookingResource;
 
 import java.util.List;
 

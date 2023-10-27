@@ -22,7 +22,7 @@ public class CategoryServiceImpl implements CategoryService {
     public void seed() {
         Arrays.stream(DEFAULT_CATEGORY)
                 .forEach(name -> {
-                    if(!categoryRepository.existsByName(name)) {
+									if(!categoryRepository.existsByName(name)) {
                         categoryRepository.save((new Category()).withName(name));
                     }
                 });
