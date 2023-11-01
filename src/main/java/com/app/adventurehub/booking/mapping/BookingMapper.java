@@ -48,10 +48,6 @@ public class BookingMapper implements Serializable {
                 .withThumbnail(trip.getThumbnail());
     }
 
-    public List<BookingResource> toResources(List<Booking> modelList) {
-        return modelList.stream().map(this::toResource).collect(Collectors.toList());
-    }
-
     public Booking toModel(CreateBookingResource resource) {
         Long userId = userService.getUserIdFromSecurityContext();
 

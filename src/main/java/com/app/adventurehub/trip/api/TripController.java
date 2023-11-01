@@ -5,13 +5,11 @@ import com.app.adventurehub.trip.mapping.TripMapper;
 import com.app.adventurehub.trip.resource.CreateTripResource;
 import com.app.adventurehub.trip.resource.TripAggregateResource;
 import com.app.adventurehub.trip.resource.TripResource;
-import com.app.adventurehub.user.service.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
@@ -22,14 +20,7 @@ import java.util.List;
 @SecurityRequirement(name = "Bearer Authentication")
 public class TripController {
 	private final TripService tripService;
-	private final UserServiceImpl userService;
 	private final TripMapper mapper;
-
-	@GetMapping("/protected")
-	@PreAuthorize("hasAuthority('ADMIN')")
-	public String protectedResource() {
-		return "Protected Resource";
-	}
 
 	@GetMapping
 	@Operation(summary = "Get All Trips", tags = { "Trips" })
@@ -45,12 +36,10 @@ public class TripController {
 			@RequestParam(required = false) Double minPrice,
 			@RequestParam(required = false) Double maxPrice) {
 
-
 		return new ResponseEntity<>(
 				mapper.toResourceList(tripService.getFilteredTrips(destination, season, minPrice, maxPrice)),
 				HttpStatus.OK);
 	}
-
 
 	@GetMapping("/{tripId}")
 	@Operation(summary = "Get Trip by Id", tags = { "Trips" })

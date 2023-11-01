@@ -9,16 +9,11 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 @OpenAPIDefinition
 @EnableJpaAuditing
-@SecurityScheme(
-        name = "Bearer Authentication",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        scheme = "bearer"
-)
+@SecurityScheme(name = "Bearer Authentication", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", scheme = "bearer")
 @SpringBootApplication
 public class AdventureHubApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(AdventureHubApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(AdventureHubApplication.class, args);
+	}
 }

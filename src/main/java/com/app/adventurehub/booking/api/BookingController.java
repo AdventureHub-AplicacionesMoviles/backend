@@ -1,6 +1,7 @@
 package com.app.adventurehub.booking.api;
 
-import com.app.adventurehub.booking.domain.model.entity.Booking;
+import com.app.adventurehub.booking.domain.model.AgencyBookingView;
+import com.app.adventurehub.booking.domain.model.TravelerBookingView;
 import com.app.adventurehub.booking.domain.service.BookingService;
 import com.app.adventurehub.booking.mapping.BookingMapper;
 import com.app.adventurehub.booking.resource.CreateBookingResource;
@@ -14,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import lombok.AllArgsConstructor;
 import javax.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -31,26 +33,20 @@ public class BookingController {
 		return mapper.toResourceList(bookingService.getAll());
 	}
 
-	/*
-	 * Para los usuarios viajeros se debe mostrar la lista de reservas que ha
-	 * realizado
-	 * Para los usuarios agencia se debe mostrar la lista de reservas que ha
-	 * recibido
-	 */
-	@GetMapping("/my-bookings")
-	@Operation(summary = "Get Bookings by User ID", tags = { "Bookings" })
-	public ResponseEntity<List<BookingResource>> getBookingsByUserId(
-			@RequestParam(value = "role", required = false) String role) {
+	@GetMapping("/traveler")
+	@Operation(summary = "Get Bookings by Traveler Token", tags = { "Bookings" })
+	public ResponseEntity<TravelerBookingView> getTravelerBookings() {
 		Long userId = userService.getUserIdFromSecurityContext();
-		List<Booking> bookings;
-		if (role != null && role.equalsIgnoreCase("AGENCY")) {
-			bookings = bookingService.getAgencyBookings(userId);
-		} else {
-			bookings = bookingService.getTravelerBookings(userId);
-		}
-		List<BookingResource> resources = mapper.toResources(bookings);
+		TravelerBookingView travelerBookingView = bookingService.getTravelerBookings(userId);
+		return new ResponseEntity<>(travelerBookingView, HttpStatus.OK);
+	}
 
-		return new ResponseEntity<>(resources, HttpStatus.OK);
+	@GetMapping("/agency")
+	@Operation(summary = "Get Bookings by Agency Token", tags = { "Bookings" })
+	public ResponseEntity<List<AgencyBookingView>> getAgencyBookings() {
+		Long userId = userService.getUserIdFromSecurityContext();
+		List<AgencyBookingView> bookings = bookingService.getAgencyBookings(userId);
+		return new ResponseEntity<>(bookings, HttpStatus.OK);
 	}
 
 	@PostMapping

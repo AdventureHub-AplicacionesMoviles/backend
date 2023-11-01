@@ -6,6 +6,9 @@ import com.app.adventurehub.user.domain.model.entity.User;
 import lombok.*;
 
 import javax.persistence.*;
+
+import org.hibernate.validator.internal.util.stereotypes.Lazy;
+
 import java.util.Date;
 
 @Getter
@@ -16,20 +19,20 @@ import java.util.Date;
 @Entity
 @Table(name = "booking")
 public class Booking {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private Date date;
-    @Enumerated(EnumType.STRING)
-    private BookingStatus status;
-    private Long numberOfPeople;
-    @ManyToOne
-    @JoinColumn(name="user_id", nullable=false)
-    private User user;
-    @ManyToOne
-    @JoinColumn(name="trip_id", nullable=false)
-    private Trip trip;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
+	private Date date;
+	@Enumerated(EnumType.STRING)
+	private BookingStatus status;
+	private Long numberOfPeople;
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
+	@ManyToOne
+	@JoinColumn(name = "trip_id", nullable = false)
+	private Trip trip;
 
-    // @OneToMany(mappedBy = "booking", cascade = CascadeType.PERSIST)
-    // private Set<Payment> payments = new HashSet<>();
+	// @OneToMany(mappedBy = "booking", cascade = CascadeType.PERSIST)
+	// private Set<Payment> payments = new HashSet<>();
 }
